@@ -2,10 +2,11 @@ import { Metadata } from "next"
 
 import { Separator } from "@/components/ui/separator"
 
-import { type PageInfo, getProducts } from "@/lib/api"
-import { SearchProduct } from "@/components/search-product"
 import LoadMore from "@/components/load-more"
+import { SearchProduct } from "@/components/search-product"
 import { ProductsList } from "@/components/product-list"
+
+import { type PageInfo, getProducts } from "@/lib/api"
 
 export const metadata: Metadata = {
   title: "Kiosko",

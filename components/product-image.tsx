@@ -1,13 +1,15 @@
 "use client"
 
+import { useContext } from "react"
 import Image from "next/image"
+import { PlusSquare, ShoppingCart } from "lucide-react"
+
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Button } from "@/components/ui/button"
+import { Variants } from "@/components/variants"
 
 import { cn, shimmer, toBase64 } from "@/lib/utils"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Variants } from "@/components/variants"
-import { PlusSquare, ShoppingCart } from "lucide-react"
-import { Button } from "./ui/button"
-import { useLocalStorage } from "@/hooks/use-local-storage"
+import { CartContext } from "@/context/cart"
 
 interface ProductImageProps extends React.HTMLAttributes<HTMLDivElement> {
   product: Product
@@ -25,8 +27,8 @@ export function ProductImage({
   className,
   ...props
 }: ProductImageProps) {
-  const cart = useLocalStorage<string[]>('cart', [])
-  const isInCart = cart.value.includes(product.variants[0].id)
+  const { state, dispatch } = useContext(CartContext);
+  const isInCart = state.merchandise.includes(product.variants[0].id)
   return (
     <div id={product.handle} role="product" className={cn("flex flex-col items-center", className)} {...props}>
       <div className="space-y-3" >
@@ -60,12 +62,10 @@ export function ProductImage({
               className="w-fit h-fit p-0"
               onClick={() => {
                 if (isInCart) {
-                  const filteredCart = cart.value.filter(id => id !== product.variants[0].id)
-                  cart.value = filteredCart
-                  return
+                  dispatch({ type: "REMOVE", payload: product.variants[0].id })
+                } else {
+                  dispatch({ type: "ADD", payload: product.variants[0].id })
                 }
-                const newCart = [...cart.value, product.variants[0].id]
-                cart.value = newCart
               }}
             >
               {isInCart ? <ShoppingCart className="h-6 w-6 p-1 text-white" /> : <PlusSquare className="w-6 h-6 text-white" />}

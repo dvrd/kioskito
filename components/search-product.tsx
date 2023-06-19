@@ -4,11 +4,10 @@ import { type KeyboardEvent, useRef, useState, useTransition } from "react";
 import Image from "next/image";
 import { useRouter } from 'next/navigation'
 
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,

@@ -1,6 +1,8 @@
 import { Exo } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs'
 
+import { CartContextProvider } from "@/context/cart"
+
 import { Menu } from '@/components/menu';
 
 import '@/styles/globals.css';
@@ -25,12 +27,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={exo.variable}>
         <ClerkProvider>
-          <div className="flex flex-col">
-            <Menu />
-            <div className="bg-background p-4 border-t">
-                  {children}
+          <CartContextProvider>
+            <div className="flex flex-col">
+              <Menu />
+              <div className="bg-background p-4 border-t">
+                {children}
+              </div>
             </div>
-          </div>
+          </CartContextProvider>
         </ClerkProvider>
       </body>
     </html>

@@ -13,10 +13,12 @@ A boilerplate app for an e-commerce
 - [x] Product cards styles normalized
 - [x] Shimmer for images
 - [x] Loading animation when changing variants
+- [x] Add mini cart menu
 - [ ] Filtering of products
 - [ ] Add notifications
 - [ ] Add collections
-- [ ] Add product to cart
+- [x] Add product to cart from main list
+- [ ] Add product from variants
 - [ ] Remove from cart
 - [ ] Update cart
 - [ ] Improve `product/[id]` route
@@ -28,3 +30,4 @@ A boilerplate app for an e-commerce
 
 ## Improvements
 - [ ] Product popover needs to work on hover
+- [ ] Error handling is still shitty

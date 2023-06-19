@@ -205,3 +205,79 @@ export const getProduct = async (handle: string): Promise<Result<Product>> => {
     return { ok: false, error: error as Error };
   }
 }
+
+const cartQuery = (productIds: string[]) => `
+mutation CartCreate {
+  cartCreate(
+    input: {
+      lines: ${JSON.stringify(productIds.map(id => ({ quantity: 1, merchandiseId: id }))).replace(/"([^(")"]+)":/g,"$1:")}
+    }
+  ) {
+    cart {
+      id
+      createdAt
+      updatedAt
+      lines(first: 10) {
+        edges {
+          node {
+            id
+            merchandise {
+              ... on ProductVariant {
+                id
+                title
+                image {
+                  id
+                  url
+                }
+              }
+            }
+          }
+        }
+      }
+      cost {
+        totalAmount {
+          amount
+          currencyCode
+        }
+        subtotalAmount {
+          amount
+          currencyCode
+        }
+      }
+    }
+  }
+}
+`;
+
+export const createCart = async (productIds: string[]): Promise<Result<Cart>> => {
+  try {
+    const request = await fetch('https://mock.shop/api', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: cartQuery(productIds),
+      }),
+    })
+    const response = await request.json();
+
+    if (isGqlError(response)) {
+      return { ok: false, error: new Error(response.errors[0].message) };
+    }
+
+    if (!isData(response) || !('cartCreate' in response.data)) {
+      return { ok: false, error: new Error("No available data") };
+    }
+
+    const product = transformObject(response.data.cartCreate.cart) as Cart;
+
+    return {
+      ok: true,
+      value: product,
+    };
+  } catch (error) {
+    return { ok: false, error: error as Error };
+  }
+}
+

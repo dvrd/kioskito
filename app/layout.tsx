@@ -1,7 +1,9 @@
-import '@/styles/globals.css';
 import { Exo } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs'
+
 import { Menu } from '@/components/menu';
+
+import '@/styles/globals.css';
 
 export const metadata = {
   title: 'Kiosko',

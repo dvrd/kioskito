@@ -10,6 +10,8 @@ type GqlPayload = {
     };
   } | {
     product: Product
+  } | {
+    cartCreate: Cart
   }
 };
 
@@ -39,4 +41,29 @@ type Product = {
   variants: Variant[];
 };
 
-
+type Cart = {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  lines: {
+    id: string;
+    merchandise: {
+      id: string;
+      title: string;
+      image: {
+        id: string;
+        url: string;
+      }
+    }
+  }[]
+  cost: {
+    totalAmount: {
+      amount: number
+      currencyCode: string
+    },
+    subtotalAmount: {
+      amount: number
+      currencyCode: string
+    }
+  }
+}

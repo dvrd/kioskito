@@ -5,9 +5,9 @@ import Image from "next/image"
 import { cn, shimmer, toBase64 } from "@/lib/utils"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Variants } from "@/components/variants"
-import { PlusSquare } from "lucide-react"
+import { PlusSquare, ShoppingCart } from "lucide-react"
 import { Button } from "./ui/button"
-import { useState } from "react"
+import { useLocalStorage } from "@/hooks/use-local-storage"
 
 interface ProductImageProps extends React.HTMLAttributes<HTMLDivElement> {
   product: Product
@@ -17,7 +17,7 @@ interface ProductImageProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 
-export async function ProductImage({
+export function ProductImage({
   product,
   aspectRatio = "portrait",
   width,
@@ -25,6 +25,8 @@ export async function ProductImage({
   className,
   ...props
 }: ProductImageProps) {
+  const cart = useLocalStorage<string[]>('cart', [])
+  const isInCart = cart.value.includes(product.variants[0].id)
   return (
     <div id={product.handle} role="product" className={cn("flex flex-col items-center", className)} {...props}>
       <div className="space-y-3" >
@@ -47,7 +49,7 @@ export async function ProductImage({
             </div>
           </PopoverTrigger>
           <PopoverContent className="w-max animate-in slide-in-from-top duration-500 p-0 border-none shadow-none" sideOffset={-360}>
-            <Variants product={product}/>
+            <Variants product={product} />
           </PopoverContent>
         </Popover>
         <div className="space-y-1">
@@ -56,8 +58,17 @@ export async function ProductImage({
             <Button
               size="sm"
               className="w-fit h-fit p-0"
+              onClick={() => {
+                if (isInCart) {
+                  const filteredCart = cart.value.filter(id => id !== product.variants[0].id)
+                  cart.value = filteredCart
+                  return
+                }
+                const newCart = [...cart.value, product.variants[0].id]
+                cart.value = newCart
+              }}
             >
-              <PlusSquare className="w-8 h-8 text-white" />
+              {isInCart ? <ShoppingCart className="h-6 w-6 p-1 text-white" /> : <PlusSquare className="w-6 h-6 text-white" />}
             </Button>
           </div>
           <div className="flex items-center space-x-1">

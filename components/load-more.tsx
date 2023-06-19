@@ -63,9 +63,7 @@ export const LoadMore = ({ children, next, loadMoreAction }: Props) => {
         {children}
         {loadMoreNodes}
       </div>
-      <div ref={ref}>
-        {isLoading && <Loader2 className="animate-spin" />}
-      </div>
+      <div ref={ref} />
     </>
   );
 };

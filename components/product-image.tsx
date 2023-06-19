@@ -12,17 +12,19 @@ import { Variants } from "@/components/variants"
 import { cn, shimmer, toBase64 } from "@/lib/utils"
 import { CartContext } from "@/context/cart"
 
-interface ProductImageProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ProductImageProps extends React.ReactHTMLElement<HTMLDivElement> {
   product: Product
   aspectRatio?: "portrait" | "square"
+  idx: number
   width?: number
   height?: number
+  className?: string
 }
-
 
 export function ProductImage({
   product,
   aspectRatio = "portrait",
+  idx,
   width,
   height,
   className,
@@ -32,7 +34,12 @@ export function ProductImage({
   const [isVisible, setIsVisible] = useState(false)
   const isInCart = state.merchandise.includes(product.variants[0].id)
   return (
-    <div id={product.handle} role="product" className={cn("flex flex-col items-center", className)} {...props}>
+    <motion.div 
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0 }} 
+      transition={{ type: "spring", delay: idx * 0.15 }}
+    >
+      <div id={product.handle} role="product" className={cn("flex flex-col items-center", className)} {...props}>
       <div className="space-y-3" >
         <Popover open={isVisible} onOpenChange={state => setIsVisible(state)}>
           <PopoverTrigger>
@@ -88,12 +95,13 @@ export function ProductImage({
                     <motion.span
                       key="in-cart"
                       animate={{
-                        opacity: 1,
                         translateY: [180, 0],
                       }}
                       exit={{
                         position: "absolute",
-                        opacity: 0,
+                      }}
+                      transition={{
+                        duration: 0.3,
                       }}
                     >
                       <ShoppingCart className="h-6 w-6 p-1 text-white" />
@@ -102,12 +110,13 @@ export function ProductImage({
                     <motion.span
                       key="off-cart"
                       animate={{
-                        opacity: 1,
                         translateY: [180, 0],
                       }}
                       exit={{
                         position: "absolute",
-                        opacity: 0,
+                      }}
+                      transition={{
+                        duration: 0.3,
                       }}
                     >
                       <PlusSquare className="w-6 h-6 text-white" />
@@ -122,6 +131,7 @@ export function ProductImage({
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </motion.div>
   )
 }

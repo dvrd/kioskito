@@ -7,9 +7,10 @@ export const ProductsList = async ({
 }) => {
   return (
     <>
-      {products && products.map((product) => (
+      {products && products.map((product, idx) => (
         <ProductImage
           key={product.id}
+          idx={idx}
           product={product}
           className="w-full"
           aspectRatio="portrait"

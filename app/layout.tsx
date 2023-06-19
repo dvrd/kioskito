@@ -1,13 +1,14 @@
-import './globals.css';
-import { Inter } from 'next/font/google';
+import '@/styles/globals.css';
+import { Exo } from 'next/font/google';
+import { ClerkProvider } from '@clerk/nextjs'
+import { Menu } from '@/components/menu';
 
 export const metadata = {
-  title: 'Vercel Postgres Demo with Drizzle',
-  description:
-    'A simple Next.js app with Vercel Postgres as the database and Drizzle as the ORM',
+  title: 'Kiosko',
+  description: 'an online marketplace but more interactive',
 };
 
-const inter = Inter({
+const exo = Exo({
   variable: '--font-inter',
   subsets: ['latin'],
   display: 'swap',
@@ -20,7 +21,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.variable}>{children}</body>
+      <body className={exo.variable}>
+        <ClerkProvider>
+          <div className="flex flex-col">
+            <Menu />
+            <div className="bg-background p-4 border-t">
+                  {children}
+            </div>
+          </div>
+        </ClerkProvider>
+      </body>
     </html>
   );
 }

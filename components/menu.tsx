@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react"
 import Image from "next/image"
 import { UserButton } from "@clerk/nextjs"
-import { CreditCard, DollarSign, ShoppingCart } from "lucide-react"
+import { CreditCard, DollarSign, Loader2, ShoppingCart } from "lucide-react"
 import Link from "next/link"
 
 import {
@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useLocalStorage } from "@/hooks/use-local-storage"
 import { createCart } from "@/lib/api"
-import { shimmer, toBase64 } from "@/lib/utils"
+import { cn, shimmer, toBase64 } from "@/lib/utils"
+import { buttonVariants } from "./ui/button"
 
 export function Menu() {
   const cart = useLocalStorage<string[]>('cart', [])
@@ -40,7 +41,7 @@ export function Menu() {
       <Link href="/" className="font-bold">Kioskito</Link>
       <div className="flex gap-4 items-center">
         <DropdownMenu onOpenChange={handleOpenCart}>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger className={cn(buttonVariants({ variant: 'ghost' }), "p-2")}>
             <ShoppingCart />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -79,7 +80,7 @@ export function Menu() {
                     </Link>
                   </DropdownMenuItem>
                 </>
-              ) : <span className="p-2">{loading ? 'cargando...' : 'No hay productos en el carrito'}</span>
+              ) : <span className="p-2 w-full flex items-center justify-center">{loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'No hay productos en el carrito'}</span>
             }
           </DropdownMenuContent>
         </DropdownMenu>

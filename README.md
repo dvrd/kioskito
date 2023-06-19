@@ -11,10 +11,16 @@ A boilerplate app for an e-commerce
 [x] Search bar
 [x] Search route
 [] Add collections
-[] Add cart functionality
+[] Add product to cart
+[] Remove from cart
+[] Update cart
 [] Improve `product/[id]` route
 [] Style login
 [] API
 [] Payments
+[] Wish list
+[] Rewards
 
-
+## Improvements
+[] First load of never used images is too slow
+[] Product popover needs to work on hover

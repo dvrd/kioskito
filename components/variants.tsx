@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Image from "next/image"
 
 import { Badge } from "@/components/ui/badge"
@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 import { cn, shimmer, toBase64 } from "@/lib/utils"
 import Link from "next/link"
+import { Loader2 } from "lucide-react"
 
 type Props = {
   product: Product
@@ -24,7 +25,8 @@ export const colorMap = new Map<string, string>([
 
 export const Variants = ({ product }: Props) => {
   const { title, description, handle, variants } = product
-  
+  const [loading, setLoading] = useState(true)
+
   const mappedVariants = useMemo(() => {
     return variants.reduce((map, variant) => {
       if (!variant.availableForSale) return map
@@ -48,52 +50,22 @@ export const Variants = ({ product }: Props) => {
 
   const [selectedSize, setSelectedSize] = useState<string>(firstKey)
   const [selectedColor, setSelectedColor] = useState<string>(firstColor)
+  const [previousVariant, setPreviousVariant] = useState<Variant | null>(null)
 
   const currentVariant = mappedVariants.get(selectedSize)?.get(selectedColor);
   const availableColors = Array.from(mappedVariants.get(selectedSize)?.keys() || [])
 
+  useEffect(() => {
+    if (previousVariant?.image.url !== currentVariant?.image.url) setLoading(true)
+  }, [previousVariant, currentVariant])
 
-  if (variants.length === 0 || !selectedSize || !selectedColor || !currentVariant) {
-    return (
-      <Card className="w-max flex-row-reverse flex">
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
-          <div className="flex items-center space-x-1">
-            <p className="text-lg text-muted-foreground">{variants[0].price.amount}</p>
-            <p className="text-lg text-muted-foreground">{variants[0].price.currencyCode}</p>
-          </div>
-          <CardDescription className="w-[300px] text-justify">{description}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Link href={`/products/${handle}`} className="overflow-hidden rounded-md">
-            <Suspense fallback={<Image
-              src={`data:image/svg+xml;base64,${toBase64(shimmer(225, 330))}`}
-              alt="placeholder"
-              priority
-              width={225}
-              height={330}
-              className="h-auto w-full rounded-md opacity-50 object-cover animate-in zoom-out duration-300 transition-all hover:scale-105 cursor-pointer aspect-[3/4]"
-            />}
-            >
-              <Image
-                priority={true}
-                src={variants[0].image.url}
-                alt={variants[0].title}
-                width={200}
-                height={200}
-                blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(700, 475))}`}
-                className="h-auto w-auto object-cover aspect-square cursor-pointer"
-              />
-            </Suspense>
-          </Link>
-        </CardContent>
-      </Card>
-    )
+  if (!selectedSize || !selectedColor || !currentVariant) {
+    return null
   }
 
   return (
     <Card className="w-max flex-row-reverse flex">
-      <CardHeader>
+      <CardHeader className="max-h-[320px] w-[320px] p-0 m-6 overflow-scroll">
         <CardTitle>{title}</CardTitle>
         <div className="flex items-center space-x-1">
           <p className="text-lg text-muted-foreground">{currentVariant.price.amount}</p>
@@ -104,7 +76,10 @@ export const Variants = ({ product }: Props) => {
             {Array.from(mappedVariants.keys()).map(size => (
               <div key={size} className="flex items-center">
                 <Badge
-                  onClick={() => setSelectedSize(size)}
+                  onClick={() => {
+                    setSelectedSize(size)
+                    setPreviousVariant(currentVariant)
+                  }}
                   variant={selectedSize === size ? 'default' : 'outline'}
                   className="cursor-pointer"
                 >
@@ -121,7 +96,10 @@ export const Variants = ({ product }: Props) => {
                   <Checkbox
                     key={color}
                     checked={selectedColor === color}
-                    onCheckedChange={() => setSelectedColor(color)}
+                    onCheckedChange={() => {
+                      setSelectedColor(color)
+                      setPreviousVariant(currentVariant)
+                    }}
                     className={cn("w-4 h-4 rounded-full cursor-pointer", colorMap.get(color))}
                   />
                 ))}
@@ -129,20 +107,22 @@ export const Variants = ({ product }: Props) => {
             </>
           )}
         </div>
-        <CardDescription className="w-[300px] text-justify">{description}</CardDescription>
+        <CardDescription className="text-justify">{description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex items-center p-0 pl-6">
-        <Link href={`/products/${handle}`} className="overflow-hidden rounded-md">
+      <CardContent className="flex items-center p-6">
+        <Link href={`/products/${handle}`} className="overflow-hidden relative rounded-md">
           <Image
             priority
             src={currentVariant.image.url}
             alt={currentVariant.title}
+            onLoad={() => setLoading(false)}
             placeholder="blur"
-            width={200}
-            height={200}
-            blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(200, 200))}`}
-            className="h-auto w-auto object-cover aspect-square cursor-pointer"
+            width={320}
+            height={320}
+            blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(320, 320))}`}
+            className="h-[320px] w-[320px] object-cover aspect-square cursor-pointer"
           />
+          {loading && <Loader2 className="absolute animate-spin right-2 bottom-2" />}
         </Link>
       </CardContent>
     </Card>

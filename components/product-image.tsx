@@ -7,6 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Variants } from "@/components/variants"
 import { PlusSquare } from "lucide-react"
 import { Button } from "./ui/button"
+import { useState } from "react"
 
 interface ProductImageProps extends React.HTMLAttributes<HTMLDivElement> {
   product: Product
@@ -39,7 +40,7 @@ export async function ProductImage({
                 placeholder="blur"
                 blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(width || 700, height || 475))}`}
                 className={cn(
-                  "h-auto w-auto object-cover animate-in zoom-out duration-300 transition-all hover:scale-105 cursor-pointer",
+                  `h-[${height}px] w-[${width}px] object-cover animate-in zoom-out duration-300 transition-all hover:scale-105 cursor-pointer`,
                   aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
                 )}
               />

@@ -10,6 +10,10 @@ A boilerplate app for an e-commerce
 - [x] Product route
 - [x] Search bar
 - [x] Search route
+- [x] Product cards styles normalized
+- [x] Shimmer for images
+- [x] Loading animation when changing variants
+- [ ] Filtering of products
 - [ ] Add notifications
 - [ ] Add collections
 - [ ] Add product to cart
@@ -23,5 +27,4 @@ A boilerplate app for an e-commerce
 - [ ] Rewards
 
 ## Improvements
-- [ ] First load of never used images is too slow
 - [ ] Product popover needs to work on hover

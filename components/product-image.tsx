@@ -64,9 +64,9 @@ export function ProductImage({
               <PopoverContent side="bottom" className="w-max p-0 border-none shadow-none" sideOffset={-360}>
                 <motion.div
                   key={product.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
+                  initial={{ y: -50 }}
+                  animate={{ y: 0 }}
+                  exit={{ y: -50 }}
                   transition={{ duration: 0.3 }}
                 >
                   <Variants product={product} />

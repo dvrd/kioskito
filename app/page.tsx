@@ -22,10 +22,9 @@ const loadProducts = async (next: PageInfo): Promise<{ next: PageInfo; html: JSX
   const { products, pageInfo } = response.value;
   return {
     html: <ProductsList products={products} />,
-    next: pageInfo
+    next: pageInfo,
   };
 }
-
 
 export default async function Page() {
   const response = await getProducts({ numProducts: 10, cursor: null });
@@ -40,9 +39,7 @@ export default async function Page() {
     <div className="h-full w-full space-y-6">
       <div className="flex items-center justify-between flex-col-reverse sm:flex-row gap-4">
         <div className="space-y-1">
-          <h2 className="text-2xl font-semibold tracking-tight">
-            Compra
-          </h2>
+          <h2 className="text-2xl font-semibold tracking-tight">Compra</h2>
           <p className="text-sm text-muted-foreground">
             Los mejores productos para ti el dia de hoy
           </p>
@@ -55,6 +52,5 @@ export default async function Page() {
       </LoadMore>
       <Separator className="my-4" />
     </div>
-  )
+  );
 }
-

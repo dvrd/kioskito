@@ -14,7 +14,7 @@ type Props = React.PropsWithChildren<{
 }>
 
 export const LoadMore = ({ children, next, loadMoreAction }: Props) => {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null)
   const entry = useIntersectionObserver(ref, {});
   const isVisible = !!entry?.isIntersecting;
   const [pageInfo, setPageInfo] = useState(next);
@@ -28,14 +28,14 @@ export const LoadMore = ({ children, next, loadMoreAction }: Props) => {
   const loadMore = useCallback(
     (abortController?: AbortController) => {
       startTransition(async () => {
-        const response = await loadMoreAction(pageInfo)
+        const response = await loadMoreAction(pageInfo);
 
         if (abortController?.signal.aborted) return;
 
         setLoadMoreNodes((prev) => [...prev, response.html]);
 
         setPageInfo(response.next);
-      })
+      });
     },
     [loadMoreAction, pageInfo]
   );
